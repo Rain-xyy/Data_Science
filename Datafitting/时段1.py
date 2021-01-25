@@ -37,14 +37,17 @@ def plot(path,p):
     
     #prepareDataXY(listFiltered) 统计样本落入随机变量X的情况
     lsty=[]
-    n=(int) (max(listFiltered)/p) +1
-    m=max(listFiltered)/n+1
+    n=0
+    if max(listFiltered)%p!=0:
+        n=(int) (max(listFiltered)/p) +1
+    else:
+        n=(int) (max(listFiltered)/p)
     for i in range(0,n):
-        lsty+=[len(list(filter(lambda x:i*m<x<=(i+1)*m,listFiltered)))]
+        lsty+=[len(list(filter(lambda x:i*p<x<=(i+1)*p,listFiltered)))]
     lstx=[]
     for i in range(0,n):
-        #横坐标
-        lstx+=[(i+1)]#横坐标单位:    p条评论
+        #横坐标(ip,(i+1)*p]条评论
+        lstx+=[(i+1)]
         
     xdata=np.array(lstx)
     ydata =np.array(lsty)
@@ -73,8 +76,8 @@ def plot(path,p):
     plt.figure('拟合图')
     plt.plot(xdata, ydata, 'b-', label='data')
     popt, pcov = curve_fit(func, xdata, ydata)
-#    a = popt[0] 
-#    b = popt[1]
+    #a = popt[0] 
+    #b = popt[1]
     #预测值
     y_pred = [func(i, popt[0],popt[1]) for i in xdata]
     #画图
@@ -87,6 +90,5 @@ def plot(path,p):
     r2 = r2_score(ydata , y_pred)
     print('高斯函数拟合R方为:',r2)
     
-plot('D:\\1_2019.12.8-2020.1.23_Comments.xlsx',1)
+plot('D:\\1_2019.12.8-2020.1.23_Comments.xlsx',100)
 
-    

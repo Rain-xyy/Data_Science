@@ -9,7 +9,7 @@ import numpy as np
 import math
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
-def plot(path):
+def plot(path,p):
     df=pd.read_excel(path)
     list_comment_counts=df["comment_count"]
     def lessThan8000(x):
@@ -34,14 +34,17 @@ def plot(path):
     
     #prepareDataXY(listFiltered)
     lsty=[]
-    n=(int) (max(listFiltered)/1) +1
+    n=0
+    if max(listFiltered)%p!=0:
+        n=(int) (max(listFiltered)/p) +1
+    else:
+        n=(int) (max(listFiltered)/p)
     for i in range(0,n):
-        m=max(listFiltered)/n+1
-        lsty+=[len(list(filter(lambda x:i*m<x<=(i+1)*m,listFiltered)))]
+        lsty+=[len(list(filter(lambda x:i*p<x<=(i+1)*p,listFiltered)))]
     lstx=[]
     for i in range(0,n):
-        #横坐标
-        lstx+=[(i+1)]#横坐标单位:... 
+        #横坐标(ip,(i+1)*p]条评论
+        lstx+=[(i+1)]
         
     u,v=parameter(lsty,n)  
      
@@ -83,5 +86,5 @@ def plot(path):
     r2 = r2_score(ydata , y_pred )
     print('高斯函数拟合R方为:',r2)
     
-plot('D:\\4_2020.3.10-2020.6.15_Comments.xlsx')
+plot('D:\\4_2020.3.10-2020.6.15_Comments.xlsx',1)
     
